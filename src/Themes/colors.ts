@@ -1,0 +1,10 @@
+export const COLORS = {
+  WHITE: '#F7F7F7',
+  LIGHT_ORANGE: '#FFBC97',
+  ORANGE: '#FF7800',
+  YELLOW: '#FFE300',
+  MUSTARD_YELLOW: '#f7b602',
+  BLACK: '#000000',
+  GRAY: '#9A9483',
+  DARK_GRAY: '#4A403A',
+}
