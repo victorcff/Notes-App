@@ -1,101 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, Text, View } from 'react-native'
 import { useDispatch } from 'react-redux';
 import { AddButton } from '../../Components/AddButton';
 import { HomeListItem } from '../../Components/HomeListItem';
 import { SearchBar } from '../../Components/SearchBar';
-import { idPicker, notePicker, titlePicker } from '../../Features/notePickerSlice';
-import { addNote } from '../../Features/notesSlice';
+import { idPicker, notePicker, titlePicker, addNote, getId, INotes } from '../../Features/notePickerSlice';
 import { useAppSelector } from '../../hooks';
 import { styles } from './styles';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { MainStackParamList } from '../../../routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export function Home(){
-  const notes = [
-    {
-      id: 1,
-      title: 'Mercado',
-      category: 'Lists',
-      note: 'Fazer compras',
-    },
-    {
-      id: 2,
-      title: 'Manicure',
-      category: 'Lists',
-      note: 'Fazer unhas'
-    },
-    {
-      id: 3,
-      title: 'Limpeza',
-      category: 'Lists',
-      note: 'Limpar a casa'
-    },
-    {
-      id: 4,
-      title: 'Testes',
-      category: 'Work',
-      note: 'Fazer testes do app'
-    },
-    {
-      id: 5,
-      title: 'Auth',
-      category: 'Work',
-      note: 'Verificar a autenticação'
-    }, 
-    {
-      id: 6,
-      title: 'Reunião',
-      category: 'Work',
-      note: 'Reunião 10h'
-    }, 
-    {
-      id: 7,
-      title: 'Palestra',
-      category: 'Work',
-      note: 'Marcar palestra'
-    },
-    {
-      id: 8,
-      title: 'Notas',
-      category: 'Ideas',
-      note: 'Notas'
-    }, 
-    {
-      id: 9,
-      title: 'Market Place',
-      category: 'Ideas',
-      note: 'Market place'
-    },
-    {
-      id: 10,
-      title: 'Juice',
-      category: 'Personal',
-      note: 'Comprar juice'
-    }, 
-    {
-      id: 11,
-      title: 'Sapato',
-      category: 'Personal',
-      note: 'Comprar sapato'
-    }, 
-    {
-      id: 12,
-      title: 'Build Vape',
-      category: 'Personal',
-      note: 'Buildar o vape'
-    }, 
-    {
-      id: 13,
-      title: 'Guarda-roupa',
-      category: 'Personal',
-      note: 'Arrumar armário'
-    }, 
-    {
-      id: 14,
-      title: 'Carro',
-      category: 'Personal',
-      note: 'Levar o carro para o conserto'
-    },
-  ]
+type Props = NativeStackScreenProps<MainStackParamList, 'Home'>;
+
+export function Home({navigation}: Props){
+  const notes = useAppSelector(state => state.notePicker.notes)
 
   const dispatch = useDispatch()
 
@@ -104,29 +23,73 @@ export function Home(){
     dispatch(titlePicker(''))
     dispatch(notePicker(''))
     dispatch(addNote())
+    navigation.navigate('NoteEditor')
   }
+
+  async function saveNotes() {
+    try {
+      const jsonValue = JSON.stringify(notes)
+      await AsyncStorage.setItem('@notesApp' ,jsonValue)
+    }
+    catch(e){
+      alert(e)
+    }
+  }
+
+  async function getNotes() {
+    try {
+      const value = await AsyncStorage.getItem('@notesApp')
+      if(value !== null){
+        const notesJson = JSON.parse(value)
+        notesJson.map((item: INotes) => {
+          dispatch(getId(Number(item.id)))
+          dispatch(titlePicker(item.title))
+          dispatch(notePicker(item.note))
+          dispatch(addNote())
+        })
+      }
+    }
+    catch(e) {
+      alert(e)
+    }
+  }
+
+  useEffect(() => {
+    saveNotes()
+  }, [notes])
+
+  useEffect(() => {
+    getNotes()
+  }, [])
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>My Notes</Text>
       <Text style={styles.subtitle}>{`${notes.length} notes`}</Text>
-      <View style={styles.list}>
-        <SearchBar 
+      <SearchBar 
           placeholder='Search for notes...'
         />
-        <FlatList 
-          data={notes}
-          keyExtractor={item => String(item.id)}
-          numColumns={2}
-          renderItem={({item}) => (
-            <HomeListItem
-              title={item.title} 
-              id={item.id}
-              icon='note'
-              note={item.note}
-            />
-          )}
-        />
+      <View style={styles.list}>
+        {
+          notes.length == 0 ?
+          <Text style={styles.noNotesMessageFirst}>
+            No notes yet!
+          </Text>
+          :
+          <FlatList 
+            data={notes}
+            keyExtractor={item => String(item.id)}
+            numColumns={2}
+            renderItem={({item}) => (
+              <HomeListItem
+                title={item.title} 
+                id={item.id}
+                icon='note'
+                note={item.note}
+              />
+            )}
+          />
+        }
       </View>
       <View style={styles.addButton}>
         <AddButton 

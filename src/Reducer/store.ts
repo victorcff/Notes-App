@@ -1,11 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
 import notePickerReducer from '../Features/notePickerSlice'
-import notesDirectoryReducer from '../Features/notesDirectorySlice'
 
 export const store = configureStore({
   reducer: {
     notePicker: notePickerReducer,
-    notesDirectory: notesDirectoryReducer
   }
 })
 

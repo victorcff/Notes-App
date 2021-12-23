@@ -28,6 +28,18 @@ export const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: COLORS.DARK_GRAY,
   },
+  noNotesMessageFirst: {
+    fontFamily: 'Roboto_700Bold',
+    fontSize: 20,
+    color: COLORS.WHITE,
+    textAlign: 'center',
+    lineHeight: 35,
+  },
+  noNotesMessageSecond: {
+    fontFamily: 'Roboto_700Bold',
+    fontSize: 20,
+    color: COLORS.WHITE,
+  },
   addButton: {
     position: 'absolute',
     bottom: 20,

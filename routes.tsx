@@ -6,7 +6,7 @@ import { Login } from './src/Screens/Login';
 import { NoteEditor } from './src/Screens/NoteEditor';
 import { Register } from './src/Screens/Register';
 
-type MainStackParamList = {
+export type MainStackParamList = {
   Login: undefined
   Home: undefined
   Register: undefined

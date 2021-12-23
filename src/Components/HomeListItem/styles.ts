@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginVertical: 10,
     marginHorizontal: 10,
-    backgroundColor: COLORS.MUSTARD_YELLOW,
+    backgroundColor: COLORS.YELLOW,
   },
   notePreview: {
     marginHorizontal: 15,
@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
   title: {
     fontFamily: 'Roboto_700Bold',
     fontSize: 22,
-    color: COLORS.WHITE,
+    color: COLORS.GRAY,
     marginTop: 5,
   },
   icon: {
